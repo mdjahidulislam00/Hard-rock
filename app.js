@@ -7,6 +7,7 @@ const searchSong = searchText => {
     fetch(`https://api.lyrics.ovh/suggest/:${searchText}`)
         .then(res => res.json())
         .then(data => displaySong(data.data))
+        .catch(error => displayErrorMessage("Something Went Wrong---!!!, Please try Again Later..."))
 }
 
 const displaySong = songs => {
@@ -34,12 +35,17 @@ const displaySong = songs => {
 
 //using async await 
 const getLyrics = async (artist, title) =>{
-    const res = await fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`);
-    const data = await res.json();
-    displayLyrics(data.lyrics)
+    try{
+        const res = await fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`);
+        const data = await res.json();
+        displayLyrics(data.lyrics)
+    }
+    catch(error){
+        displayErrorMessage("Fail to Load Lyrics---!!! Please try Again Later...")
+    }
 
     //USING THEN 
-    
+
     // fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
     // .then(res => res.json())
     // .then(data => displayLyrics(data.lyrics))
@@ -48,4 +54,9 @@ const getLyrics = async (artist, title) =>{
 const displayLyrics = lyrics =>{
     const displayLyricsArea = document.getElementById('lyrics-display-area')
     displayLyricsArea.innerText = lyrics;
+}
+
+const displayErrorMessage = error => {
+    const displayArea = document.getElementById('error-message-area')
+    displayArea.innerText = error;
 }
